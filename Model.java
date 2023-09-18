@@ -8,8 +8,17 @@ import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import java.io.File; // Import the File class
+import java.io.FileNotFoundException; // Import this class to handle errors
+import java.util.Scanner; // Import the Scanner class to read text files
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.io.FileWriter;
+import java.io.IOException;
 
-public class Model extends JPanel implements ActionListener {
+public class Model extends
+        JPanel implements ActionListener {
 
     private Dimension d;
     private final Font smallFont = new Font("Arial", Font.BOLD, 14);
@@ -119,7 +128,56 @@ public class Model extends JPanel implements ActionListener {
         g.setFont(smallFont);
         g.setColor(new Color(5, 181, 79));
         String s = "Score: " + score;
+        int hscore = 10;
+        try {
+            File myObj = new File("score.txt");
+            Scanner myReader = new Scanner(myObj);
+            hscore = myReader.nextInt();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+        if (score > hscore) {
+
+            try {
+                String text = Integer.toString(score);
+                // Create a FileWriter object
+                // to write in the file
+                FileWriter fWriter = new FileWriter(
+                        "score.txt");
+
+                // Writing into file
+                // Note: The content taken above inside the
+                // string
+                fWriter.write(text);
+
+                // Printing the contents of a file
+                // System.out.println(text);
+
+                // Closing the file writing connection
+                fWriter.close();
+
+                // Display message for successful execution of
+                // program on the console
+                System.out.println(
+                        "File is created successfully with the content.");
+            }
+
+            // Catch block to handle if exception occurs
+            catch (IOException e) {
+
+                // Print the exception
+                System.out.print(e.getMessage());
+            }
+
+        }
+
+        String h = "H Score: "
+                + hscore;
         g.drawString(s, SCREEN_SIZE / 2 + 96, SCREEN_SIZE + 16);
+        g.drawString(h, SCREEN_SIZE / 4 + 30, SCREEN_SIZE + 16);
 
         for (int i = 0; i < lives; i++) {
             g.drawImage(heart, i * 28 + 8, SCREEN_SIZE + 1, this);
